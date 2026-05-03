@@ -1,13 +1,11 @@
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { requireUserId } from '@/lib/auth';
 import { connectDB } from '@/lib/db';
 import ExpenseModel from '@/lib/models/Expense';
 
 export async function POST(req: Request) {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const body = await req.json();
   const docs = body.expenses.map((e: {
@@ -26,9 +24,7 @@ export async function POST(req: Request) {
 
 export async function DELETE() {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   await ExpenseModel.deleteMany({ userId });
   return NextResponse.json({ ok: true });

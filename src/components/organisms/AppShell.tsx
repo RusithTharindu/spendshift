@@ -112,10 +112,10 @@ export default function AppShell({ children }: AppShellProps) {
           {BOTTOM_NAV.slice(0, 2).map(n => {
             const active = activeId === n.id;
             return (
-              <Link key={n.id} href={n.href} style={{ textDecoration: 'none', flex: 1 }}>
-                <Tap style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '6px 10px', borderRadius: 14, color: active ? 'var(--ink)' : 'var(--ink-4)' }}>
+              <Link key={n.id} href={n.href} className="app-bottomnav-link">
+                <Tap style={{ height: 54, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 12, color: active ? 'var(--ink)' : 'var(--ink-4)' }}>
                   {n.icon}
-                  <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: 0.1 }}>{n.label}</span>
+                  <span style={{ fontSize: 10, fontWeight: active ? 600 : 500, letterSpacing: 0 }}>{n.label}</span>
                 </Tap>
               </Link>
             );
@@ -123,11 +123,11 @@ export default function AppShell({ children }: AppShellProps) {
 
           {/* FAB */}
           <Tap onClick={() => openExpense()} style={{
-            width: 50, height: 50, borderRadius: 18,
+            width: 50, height: 50, borderRadius: 16,
             background: 'var(--accent)', color: '#fff',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 4px 14px var(--accent-soft),0 1px 2px rgba(0,0,0,.1)',
-            flexShrink: 0,
+            justifySelf: 'center',
           }}>
             <IconPlus size={22} stroke={2.2} />
           </Tap>
@@ -135,10 +135,10 @@ export default function AppShell({ children }: AppShellProps) {
           {BOTTOM_NAV.slice(2).map(n => {
             const active = activeId === n.id;
             return (
-              <Link key={n.id} href={n.href} style={{ textDecoration: 'none', flex: 1 }}>
-                <Tap style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '6px 10px', borderRadius: 14, color: active ? 'var(--ink)' : 'var(--ink-4)' }}>
+              <Link key={n.id} href={n.href} className="app-bottomnav-link">
+                <Tap style={{ height: 54, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 12, color: active ? 'var(--ink)' : 'var(--ink-4)' }}>
                   {n.icon}
-                  <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: 0.1 }}>{n.label}</span>
+                  <span style={{ fontSize: 10, fontWeight: active ? 600 : 500, letterSpacing: 0 }}>{n.label}</span>
                 </Tap>
               </Link>
             );

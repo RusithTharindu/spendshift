@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 import type { AppState, Expense, Budget, Category, Tweaks } from '@/lib/types';
 import { ACCENTS, DEFAULT_CATEGORIES, FONT_PAIRS } from '@/lib/constants';
 import { buildSampleExpenses, buildSampleBudgets, getAccent } from '@/lib/utils';
@@ -24,7 +23,7 @@ interface AppContextValue {
   deleteCategory: (id: string) => Promise<void>;
   // user actions
   finishOnboarding: (data: {
-    name: string; currency: string; accentId: string; theme: 'light' | 'dark' | 'system'; sampleData: boolean;
+    currency: string; accentId: string; theme: 'light' | 'dark' | 'system'; sampleData: boolean;
   }) => Promise<void>;
   updateUser: (data: Partial<AppState>) => Promise<void>;
   resetData: () => Promise<void>;
@@ -47,13 +46,6 @@ const DEFAULT_TWEAKS: Tweaks = {
   sampleData: false,
   theme: 'light',
 };
-
-function getUserId(): string {
-  if (typeof window === 'undefined') return '';
-  let id = localStorage.getItem('spendshift_uid');
-  if (!id) { id = uuid(); localStorage.setItem('spendshift_uid', id); }
-  return id;
-}
 
 function getStoredTweaks(): Tweaks {
   if (typeof window === 'undefined') return DEFAULT_TWEAKS;
@@ -84,10 +76,9 @@ function applyFontPair(fontPair: string) {
 }
 
 async function api(path: string, method = 'GET', body?: unknown) {
-  const userId = getUserId();
   const res = await fetch(path, {
     method,
-    headers: { 'Content-Type': 'application/json', 'X-User-Id': userId },
+    headers: { 'Content-Type': 'application/json' },
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) throw new Error(await res.text());
@@ -99,6 +90,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [tweaks, setTweaksState] = useState<Tweaks>(DEFAULT_TWEAKS);
   const [state, setState] = useState<AppState>({
     name: 'You',
+    email: '',
     baseCurrency: 'USD',
     accentId: 'sage',
     accent: ACCENTS[0],
@@ -130,6 +122,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
         setState({
           name: user.name,
+          email: user.email,
           baseCurrency: user.baseCurrency,
           accentId: user.accentId,
           accent,
@@ -234,15 +227,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const finishOnboarding = useCallback(async (data: {
-    name: string; currency: string; accentId: string; theme: 'light' | 'dark' | 'system'; sampleData: boolean;
+    currency: string; accentId: string; theme: 'light' | 'dark' | 'system'; sampleData: boolean;
   }) => {
     const accent = getAccent(data.accentId);
     applyTheme(data.theme);
     applyAccent(accent.color, accent.ink);
 
     await api('/api/user', 'PATCH', {
-      name: data.name, baseCurrency: data.currency,
-      accentId: data.accentId, theme: data.theme, onboarded: true,
+      baseCurrency: data.currency, accentId: data.accentId, theme: data.theme, onboarded: true,
     });
 
     // Seed categories if none exist
@@ -270,7 +262,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
 
     setState(s => ({
-      ...s, name: data.name, baseCurrency: data.currency,
+      ...s, baseCurrency: data.currency,
       accentId: data.accentId, accent, theme: data.theme, onboarded: true,
     }));
   }, []);

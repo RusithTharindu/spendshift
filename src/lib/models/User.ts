@@ -3,6 +3,8 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IUser extends Document {
   userId: string;
   name: string;
+  email: string;
+  passwordHash: string;
   baseCurrency: string;
   accentId: string;
   theme: 'light' | 'dark' | 'system';
@@ -12,6 +14,8 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>({
   userId:       { type: String, required: true, unique: true, index: true },
+  email:        { type: String, required: true, unique: true, sparse: true, index: true },
+  passwordHash: { type: String, required: true },
   name:         { type: String, default: 'You' },
   baseCurrency: { type: String, default: 'USD' },
   accentId:     { type: String, default: 'sage' },

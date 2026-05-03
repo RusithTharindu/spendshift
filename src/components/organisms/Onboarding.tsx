@@ -8,9 +8,8 @@ import Radio from '@/components/atoms/Radio';
 import { IconArrowR, IconSearch, IconCheck, IconSun, IconMoon } from '@/components/atoms/Icons';
 
 export default function Onboarding() {
-  const { finishOnboarding } = useApp();
+  const { state, finishOnboarding } = useApp();
   const [step, setStep] = useState(0);
-  const [name, setName] = useState('');
   const [currency, setCurrency] = useState('USD');
   const [accentId, setAccentId] = useState('sage');
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
@@ -33,7 +32,7 @@ export default function Onboarding() {
     if (step < TOTAL - 1) {
       setStep(s => s + 1);
     } else {
-      await finishOnboarding({ name: name.trim() || 'You', currency, accentId, theme, sampleData });
+      await finishOnboarding({ currency, accentId, theme, sampleData });
     }
   };
 
@@ -67,7 +66,7 @@ export default function Onboarding() {
         </div>
 
         <div key={step} className="anim-fade-up">
-          {step === 0 && <StepWelcome name={name} setName={setName} accentColor={accent.color} />}
+          {step === 0 && <StepWelcome name={state.name} />}
           {step === 1 && <StepCurrency value={currency} onChange={setCurrency} accentColor={accent.color} />}
           {step === 2 && <StepAccent value={accentId} onChange={setAccentId} />}
           {step === 3 && <StepTheme value={theme} onChange={setTheme} accentColor={accent.color} />}
@@ -98,32 +97,14 @@ export default function Onboarding() {
   );
 }
 
-function StepWelcome({ name, setName, accentColor }: { name: string; setName: (v: string) => void; accentColor: string }) {
+function StepWelcome({ name }: { name: string }) {
   return (
     <div>
       <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1, color: 'var(--ink)' }}>
-        Welcome to<br />SpendShift
+        Welcome, {name || 'there'}
       </div>
       <div style={{ fontSize: 15, color: 'var(--ink-3)', lineHeight: 1.6, marginTop: 14, maxWidth: 340 }}>
-        A quiet, local-only way to track where your money actually goes. No accounts, no ads.
-      </div>
-      <div style={{ marginTop: 32 }}>
-        <div style={{ fontSize: 11, color: 'var(--ink-3)', fontWeight: 500, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>
-          What should we call you?
-        </div>
-        <input
-          autoFocus value={name} onChange={e => setName(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-          placeholder="Your name (optional)"
-          style={{
-            width: '100%', padding: '14px 16px',
-            background: 'var(--surface)', border: '0.5px solid var(--line)',
-            borderRadius: 'var(--r)', fontSize: 16, color: 'var(--ink)', outline: 'none',
-            transition: 'border-color 0.15s ease',
-          }}
-          onFocus={e => (e.target.style.borderColor = accentColor)}
-          onBlur={e => (e.target.style.borderColor = 'var(--line)')}
-        />
+        Your account is ready. Next, set the currency, accent, theme, and starting data for this workspace.
       </div>
     </div>
   );
