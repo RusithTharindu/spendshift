@@ -1,26 +1,159 @@
 @import "tailwindcss";
 
+/* ── SpendShift Design System ───────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:       #FBFAF7;
+  --bg-2:     #F3F1EA;
+  --surface:  #FFFFFF;
+  --ink:      #2B2A28;
+  --ink-2:    #4A4843;
+  --ink-3:    #807C73;
+  --ink-4:    #B5B0A4;
+  --line:     #ECE8DE;
+  --line-2:   #E2DDD0;
+  --accent:        #6B7A55;
+  --accent-soft:   rgba(107,122,85,.12);
+  --accent-ink:    #4F5C3F;
+  --danger:        #B85B4A;
+  --danger-soft:   rgba(184,91,74,.10);
+  --shadow-1: 0 1px 2px rgba(43,42,40,.04),0 1px 4px rgba(43,42,40,.04);
+  --shadow-2: 0 4px 16px rgba(43,42,40,.07),0 12px 40px rgba(43,42,40,.06);
+  --r-sm:  10px;
+  --r:     16px;
+  --r-lg:  22px;
+  --r-xl:  28px;
+  --font-ui:  'Inter', system-ui, sans-serif;
+  --font-num: 'JetBrains Mono', ui-monospace, monospace;
+  --sidebar-w: 240px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  --bg:      #181714;
+  --bg-2:    #211F1C;
+  --surface: #262420;
+  --ink:     #EDEAE0;
+  --ink-2:   #C4C0B4;
+  --ink-3:   #8A8578;
+  --ink-4:   #57534A;
+  --line:    #2E2B26;
+  --line-2:  #3A362F;
+  --shadow-1: 0 1px 2px rgba(0,0,0,.28),0 1px 4px rgba(0,0,0,.22);
+  --shadow-2: 0 4px 16px rgba(0,0,0,.44),0 12px 40px rgba(0,0,0,.36);
+  --accent-soft: rgba(255,255,255,.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg);
+  color: var(--ink);
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  transition: background 0.25s ease, color 0.2s ease;
 }
+
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+button { cursor: pointer; }
+
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Hide scrollbars */
+.ss-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.ss-scroll::-webkit-scrollbar { display: none; }
+
+/* ── Layout shell ── */
+.app-shell {
+  display: flex;
+  min-height: 100svh;
+}
+
+.app-sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--bg-2);
+  border-right: 0.5px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 20;
+  transition: background 0.25s ease;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: var(--sidebar-w);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 767px) {
+  .app-sidebar  { display: none; }
+  .app-content  { margin-left: 0; padding-bottom: 80px; }
+  .app-bottomnav { display: flex !important; }
+}
+@media (min-width: 768px) {
+  .app-bottomnav { display: none !important; }
+}
+
+.app-bottomnav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 20;
+  padding: 8px 12px calc(env(safe-area-inset-bottom,0px) + 8px);
+  background: var(--surface);
+  border-top: 0.5px solid var(--line);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.app-bottomnav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.page-wrap {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 20px 32px;
+}
+
+@media (min-width: 1200px) {
+  .page-wrap { max-width: 960px; padding: 32px 40px 40px; }
+}
+
+/* Animations */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.anim-fade-up  { animation: fade-up  0.22s cubic-bezier(.2,.8,.4,1) both; }
+.anim-fade-in  { animation: fade-in  0.18s ease both; }
+
+.sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0); }
