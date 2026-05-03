@@ -2,6 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useApp } from '@/contexts/AppContext';
 import { ACCENTS } from '@/lib/constants';
 import Card from '@/components/atoms/Card';
@@ -10,11 +11,12 @@ import Sheet from '@/components/molecules/Sheet';
 import SectionHeader from '@/components/molecules/SectionHeader';
 import PageHeader from '@/components/molecules/PageHeader';
 import CurrencyPicker from '@/components/molecules/CurrencyPicker';
-import { IconCheck, IconChevR, IconWallet, IconTarget, IconExport, IconTrash, IconRepeat, IconSun, IconMoon, Icon } from '@/components/atoms/Icons';
+import { IconCheck, IconChevR, IconWallet, IconTarget, IconExport, IconTrash, IconRepeat, IconSun, IconMoon, IconSettings, Icon } from '@/components/atoms/Icons';
 
 export default function SettingsScreen() {
   const { state, updateUser, clearExpenses, resetData } = useApp();
-  const { name, baseCurrency, theme, accent, categories, budgets } = state;
+  const { name, email, baseCurrency, theme, accent, categories, budgets } = state;
+  const router = useRouter();
   const [showCurrency, setShowCurrency] = useState(false);
   const [showAccent, setShowAccent] = useState(false);
 
@@ -57,6 +59,12 @@ export default function SettingsScreen() {
     URL.revokeObjectURL(url);
   };
 
+  const handleSignOut = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.replace('/auth');
+    router.refresh();
+  };
+
   return (
     <div className="page-wrap">
       <PageHeader title="Settings" />
@@ -69,9 +77,14 @@ export default function SettingsScreen() {
           <div style={{ flex: 1 }}>
             <input value={name} onChange={e => updateUser({ name: e.target.value })}
               style={{ width: '100%', border: 0, outline: 'none', background: 'transparent', fontSize: 17, fontWeight: 600, color: 'var(--ink)' }} />
-            <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>Local-only · no sync</div>
+            <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>{email || 'Signed in'}</div>
           </div>
         </div>
+      </Card>
+
+      <SectionHeader label="Account" />
+      <Card padded={false} style={{ overflow: 'hidden', marginBottom: 14 }}>
+        <SettingRow icon={<IconSettings size={16} />} label="Sign out" onClick={handleSignOut} />
       </Card>
 
       <SectionHeader label="Appearance" />

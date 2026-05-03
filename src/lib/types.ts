@@ -41,6 +41,7 @@ export interface Budget {
 
 export interface User {
   name: string;
+  email?: string;
   baseCurrency: string;
   accentId: string;
   theme: 'light' | 'dark' | 'system';

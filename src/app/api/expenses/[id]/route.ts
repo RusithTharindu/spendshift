@@ -1,13 +1,11 @@
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { requireUserId } from '@/lib/auth';
 import { connectDB } from '@/lib/db';
 import ExpenseModel from '@/lib/models/Expense';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const { id } = await params;
   const body = await req.json();
@@ -37,9 +35,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const { id } = await params;
   await ExpenseModel.deleteOne({ userId, expenseId: id });

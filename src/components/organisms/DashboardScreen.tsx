@@ -57,11 +57,14 @@ export default function DashboardScreen() {
         <div style={{ fontSize: 13, color: 'var(--ink-3)' }}>
           {now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 4 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1.1 }}>
+        <div className="dashboard-hero-row" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, marginTop: 4 }}>
+          <h1 style={{ flex: 1, minWidth: 0, fontSize: 24, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.025em', lineHeight: 1.1 }}>
             {greet}, {name}
           </h1>
-          <Btn onClick={() => openExpense()} icon={<IconPlus size={15} stroke={2.5} />}>Add expense</Btn>
+          <Btn onClick={() => openExpense()} icon={<IconPlus size={15} stroke={2.5} />} style={{ paddingInline: 16 }}>
+            <span className="dashboard-add-full">Add expense</span>
+            <span className="dashboard-add-short">Add</span>
+          </Btn>
         </div>
       </div>
 

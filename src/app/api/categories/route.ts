@@ -1,5 +1,5 @@
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { requireUserId } from '@/lib/auth';
 import { connectDB } from '@/lib/db';
 import CategoryModel from '@/lib/models/Category';
 
@@ -9,9 +9,7 @@ function toDTO(d: { categoryId: string; name: string; glyph: string; tone: strin
 
 export async function GET() {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const docs = await CategoryModel.find({ userId }).lean();
   return NextResponse.json(docs.map(toDTO));
@@ -19,9 +17,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const body = await req.json();
   const doc = await CategoryModel.create({

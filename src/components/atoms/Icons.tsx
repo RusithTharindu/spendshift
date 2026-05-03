@@ -25,6 +25,7 @@ export const IconSearch   = (p: IconProps) => <Icon {...p}><circle cx="11" cy="1
 export const IconFilter   = (p: IconProps) => <Icon {...p}><path d="M3 6h18M6 12h12M10 18h4"/></Icon>;
 export const IconCal      = (p: IconProps) => <Icon {...p}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></Icon>;
 export const IconCard     = (p: IconProps) => <Icon {...p}><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 11h18"/></Icon>;
+export const IconLock     = (p: IconProps) => <Icon {...p}><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></Icon>;
 export const IconRepeat   = (p: IconProps) => <Icon {...p}><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></Icon>;
 export const IconTrend    = (p: IconProps) => <Icon {...p}><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></Icon>;
 export const IconWallet   = (p: IconProps) => <Icon {...p}><path d="M21 8V7a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h16v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7"/><circle cx="17" cy="13" r="1.2" fill="currentColor"/></Icon>;

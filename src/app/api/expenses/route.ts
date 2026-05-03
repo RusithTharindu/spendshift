@@ -1,13 +1,11 @@
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { requireUserId } from '@/lib/auth';
 import { connectDB } from '@/lib/db';
 import ExpenseModel from '@/lib/models/Expense';
 
 export async function GET() {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const docs = await ExpenseModel.find({ userId }).sort({ date: -1 }).lean();
   return NextResponse.json(docs.map(d => ({
@@ -26,9 +24,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const body = await req.json();
   const doc = await ExpenseModel.create({

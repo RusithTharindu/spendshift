@@ -1,13 +1,11 @@
-import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { requireUserId } from '@/lib/auth';
 import { connectDB } from '@/lib/db';
 import BudgetModel from '@/lib/models/Budget';
 
 export async function POST(req: Request) {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   const body = await req.json();
   const docs = body.budgets.map((b: { id: string; categoryId: string; amount: number; period?: string }) => ({
@@ -20,9 +18,7 @@ export async function POST(req: Request) {
 
 export async function DELETE() {
   await connectDB();
-  const hdrs = await headers();
-  const userId = hdrs.get('X-User-Id');
-  if (!userId) return NextResponse.json({ error: 'Missing user id' }, { status: 400 });
+  const userId = await requireUserId();
 
   await BudgetModel.deleteMany({ userId });
   return NextResponse.json({ ok: true });
